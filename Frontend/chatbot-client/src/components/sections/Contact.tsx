@@ -1,14 +1,11 @@
 import React, { useState, useEffect } from 'react';
 
 const Contact: React.FC = () => {
-  const [currentUrl, setCurrentUrl] = useState('');
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [formError, setFormError] = useState(false);
 
   useEffect(() => {
-    // Set the current URL when the component mounts
-    // Use the exact contact section URL to prevent scrolling to demo
-    setCurrentUrl(window.location.origin + window.location.pathname + "#contact");
+    // Add any initialization logic here if needed
   }, []);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
