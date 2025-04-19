@@ -1,4 +1,5 @@
 import React from 'react';
+import ScrollAnimation from '../ScrollAnimation';
 
 const HowItWorks: React.FC = () => {
   const steps = [
@@ -37,35 +38,39 @@ const HowItWorks: React.FC = () => {
   return (
     <div id="how-it-works" className="py-16 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="lg:text-center">
-          <h2 className="text-base text-primary-600 font-semibold tracking-wide uppercase">Process</h2>
-          <p className="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-neutral-900 sm:text-4xl">
-            How It Works
-          </p>
-          <p className="mt-4 max-w-2xl text-xl text-neutral-600 lg:mx-auto">
-            Getting your AI chatbot up and running is simple with our streamlined process.
-          </p>
-        </div>
+        <ScrollAnimation>
+          <div className="lg:text-center">
+            <h2 className="text-base text-primary-600 font-semibold tracking-wide uppercase">Process</h2>
+            <p className="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-neutral-900 sm:text-4xl">
+              How It Works
+            </p>
+            <p className="mt-4 max-w-2xl text-xl text-neutral-600 lg:mx-auto">
+              Getting your AI chatbot up and running is simple with our streamlined process.
+            </p>
+          </div>
+        </ScrollAnimation>
 
         <div className="mt-16">
           <div className="space-y-12 lg:space-y-0 lg:grid lg:grid-cols-3 lg:gap-x-8">
-            {steps.map((step) => (
-              <div key={step.id} className="relative">
-                <div className="group relative bg-white p-6 rounded-lg shadow-soft hover:shadow-md transition-shadow duration-300">
-                  <div className="flex items-center justify-center h-16 w-16 rounded-full bg-primary-100 group-hover:bg-primary-200 transition-colors duration-300 mx-auto">
-                    {step.icon}
-                  </div>
-                  <div className="mt-8">
-                    <div className="flex items-center justify-center">
-                      <span className="flex items-center justify-center h-8 w-8 rounded-full bg-primary-500 text-white text-sm font-bold">
-                        {step.id}
-                      </span>
-                      <h3 className="ml-3 text-xl font-medium text-neutral-900">{step.title}</h3>
+            {steps.map((step, index) => (
+              <ScrollAnimation key={step.id} delay={index * 150}>
+                <div className="relative">
+                  <div className="group relative bg-white p-6 rounded-lg shadow-soft hover:shadow-md transition-shadow duration-300">
+                    <div className="flex items-center justify-center h-16 w-16 rounded-full bg-primary-100 group-hover:bg-primary-200 transition-colors duration-300 mx-auto">
+                      {step.icon}
                     </div>
-                    <p className="mt-5 text-base text-center text-neutral-600">{step.description}</p>
+                    <div className="mt-8">
+                      <div className="flex items-center justify-center">
+                        <span className="flex items-center justify-center h-8 w-8 rounded-full bg-primary-500 text-white text-sm font-bold">
+                          {step.id}
+                        </span>
+                        <h3 className="ml-3 text-xl font-medium text-neutral-900">{step.title}</h3>
+                      </div>
+                      <p className="mt-5 text-base text-center text-neutral-600">{step.description}</p>
+                    </div>
                   </div>
                 </div>
-              </div>
+              </ScrollAnimation>
             ))}
           </div>
         </div>

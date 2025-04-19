@@ -28,6 +28,12 @@ code {
     monospace;
 }
 
+/* Scroll animations */
+.animate-in {
+  opacity: 1 !important;
+  transform: translateY(0) !important;
+}
+
 /* Chat typing indicator */
 .typing-indicator {
   display: flex;
