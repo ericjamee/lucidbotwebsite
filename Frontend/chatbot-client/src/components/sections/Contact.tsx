@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 
 const Contact: React.FC = () => {
   const [currentUrl, setCurrentUrl] = useState('');
+  const [formSubmitted, setFormSubmitted] = useState(false);
+  const [formError, setFormError] = useState(false);
 
   useEffect(() => {
     // Set the current URL when the component mounts
@@ -9,14 +11,40 @@ const Contact: React.FC = () => {
     setCurrentUrl(window.location.origin + window.location.pathname + "#contact");
   }, []);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    
     // Add no-scroll class to prevent auto-scrolling
     document.documentElement.classList.add('no-scroll');
     
-    // Remove it after form submission is complete
-    setTimeout(() => {
-      document.documentElement.classList.remove('no-scroll');
-    }, 500);
+    try {
+      const formData = new FormData(e.currentTarget);
+      const formObject = Object.fromEntries(formData.entries());
+      
+      // Use fetch to send the data directly to your server or a serverless function
+      const response = await fetch('https://lucidbotapp-f4hegdgqb8bpbvht.eastus-01.azurewebsites.net/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formObject),
+      });
+      
+      if (response.ok) {
+        setFormSubmitted(true);
+        e.currentTarget.reset();
+      } else {
+        setFormError(true);
+      }
+    } catch (error) {
+      console.error('Error submitting form:', error);
+      setFormError(true);
+    } finally {
+      // Remove no-scroll class after form submission is complete
+      setTimeout(() => {
+        document.documentElement.classList.remove('no-scroll');
+      }, 500);
+    }
   };
 
   return (
@@ -37,73 +65,78 @@ const Contact: React.FC = () => {
             <div className="px-6 py-8">
               <h3 className="text-xl font-bold text-neutral-900 mb-6">Send Us a Message</h3>
               
-              <form action="https://formsubmit.co/je7erickson@gmail.com" method="POST" onSubmit={handleSubmit}>
-                <div className="space-y-4">
-                  <div>
-                    <label htmlFor="name" className="block text-sm font-medium text-neutral-700">
-                      Name
-                    </label>
-                    <input
-                      type="text"
-                      name="name"
-                      id="name"
-                      required
-                      className="mt-1 block w-full border border-neutral-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary-500 focus:border-primary-500"
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="email" className="block text-sm font-medium text-neutral-700">
-                      Email
-                    </label>
-                    <input
-                      type="email"
-                      name="email"
-                      id="email"
-                      required
-                      className="mt-1 block w-full border border-neutral-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary-500 focus:border-primary-500"
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="company" className="block text-sm font-medium text-neutral-700">
-                      Company
-                    </label>
-                    <input
-                      type="text"
-                      name="company"
-                      id="company"
-                      className="mt-1 block w-full border border-neutral-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary-500 focus:border-primary-500"
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="message" className="block text-sm font-medium text-neutral-700">
-                      Message
-                    </label>
-                    <textarea
-                      name="message"
-                      id="message"
-                      rows={4}
-                      required
-                      className="mt-1 block w-full border border-neutral-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary-500 focus:border-primary-500"
-                    />
-                  </div>
-                  
-                  {/* FormSubmit hidden fields */}
-                  <input type="hidden" name="_subject" value="New Contact Form Submission" />
-                  <input type="hidden" name="_captcha" value="false" />
-                  <input type="hidden" name="_next" value={currentUrl} />
-                  <input type="hidden" name="_template" value="table" />
-                  <input type="text" name="_honey" style={{ display: 'none' }} />
-                  
-                  <div>
-                    <button
-                      type="submit"
-                      className="w-full inline-flex justify-center py-3 px-6 border border-transparent shadow-sm text-base font-medium rounded-md text-white bg-gradient-to-r from-primary-600 to-secondary-600 hover:from-primary-700 hover:to-secondary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
-                    >
-                      Send Message
-                    </button>
-                  </div>
+              {formSubmitted ? (
+                <div className="p-4 mb-4 text-sm rounded-md bg-green-50 text-green-700">
+                  <p className="font-medium">Thank you for your message!</p>
+                  <p>We'll get back to you as soon as possible.</p>
                 </div>
-              </form>
+              ) : formError ? (
+                <div className="p-4 mb-4 text-sm rounded-md bg-red-50 text-red-700">
+                  <p className="font-medium">There was an error submitting your message.</p>
+                  <p>Please try again or contact us directly at je7erickson@gmail.com</p>
+                </div>
+              ) : (
+                <form onSubmit={handleSubmit}>
+                  <div className="space-y-4">
+                    <div>
+                      <label htmlFor="name" className="block text-sm font-medium text-neutral-700">
+                        Name
+                      </label>
+                      <input
+                        type="text"
+                        name="name"
+                        id="name"
+                        required
+                        className="mt-1 block w-full border border-neutral-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary-500 focus:border-primary-500"
+                      />
+                    </div>
+                    <div>
+                      <label htmlFor="email" className="block text-sm font-medium text-neutral-700">
+                        Email
+                      </label>
+                      <input
+                        type="email"
+                        name="email"
+                        id="email"
+                        required
+                        className="mt-1 block w-full border border-neutral-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary-500 focus:border-primary-500"
+                      />
+                    </div>
+                    <div>
+                      <label htmlFor="company" className="block text-sm font-medium text-neutral-700">
+                        Company
+                      </label>
+                      <input
+                        type="text"
+                        name="company"
+                        id="company"
+                        className="mt-1 block w-full border border-neutral-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary-500 focus:border-primary-500"
+                      />
+                    </div>
+                    <div>
+                      <label htmlFor="message" className="block text-sm font-medium text-neutral-700">
+                        Message
+                      </label>
+                      <textarea
+                        name="message"
+                        id="message"
+                        rows={4}
+                        required
+                        className="mt-1 block w-full border border-neutral-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary-500 focus:border-primary-500"
+                      />
+                    </div>
+                    
+                    <div>
+                      <button
+                        type="submit"
+                        className="w-full inline-flex justify-center py-3 px-6 border border-transparent shadow-sm text-base font-medium rounded-md text-white bg-gradient-to-r from-primary-600 to-secondary-600 hover:from-primary-700 hover:to-secondary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
+                      >
+                        Send Message
+                      </button>
+                    </div>
+                  </div>
+                </form>
+              )}
             </div>
           </div>
           

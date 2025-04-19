@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Chat Emoji Favicon Generator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    canvas {
+      border: 1px solid #ccc;
+      margin: 20px 0;
+    }
+    button {
+      background-color: #4c8bf5;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    button:hover {
+      background-color: #3b7ae0;
+    }
+    .icons {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+    .icon-option {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      cursor: pointer;
+      padding: 10px;
+      border-radius: 4px;
+    }
+    .icon-option:hover {
+      background-color: #f0f0f0;
+    }
+    .icon-option.selected {
+      background-color: #e3effc;
+      border: 1px solid #4c8bf5;
+    }
+    .emoji {
+      font-size: 40px;
+      margin-bottom: 5px;
+    }
+    .color-options {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .color-option {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      cursor: pointer;
+      border: 2px solid transparent;
+    }
+    .color-option.selected {
+      border-color: #333;
+    }
+    h2 {
+      margin-top: 30px;
+      margin-bottom: 10px;
+    }
+    .instructions {
+      background-color: #f5f5f5;
+      padding: 15px;
+      border-radius: 4px;
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Chat Emoji Favicon Generator for LucidBot</h1>
+  
+  <div class="instructions">
+    <p>Use this tool to generate a chat emoji favicon for your LucidBot website:</p>
+    <ol>
+      <li>Select an emoji below</li>
+      <li>Choose a background color</li>
+      <li>Click "Generate Favicon" to preview</li>
+      <li>Click "Download Favicon" to save the .ico file</li>
+      <li>Replace the existing favicon.ico in your project's public folder</li>
+    </ol>
+  </div>
+  
+  <h2>1. Select an Emoji</h2>
+  <div class="icons">
+    <div class="icon-option selected" data-emoji="💬">
+      <span class="emoji">💬</span>
+      <span>Chat</span>
+    </div>
+    <div class="icon-option" data-emoji="🤖">
+      <span class="emoji">🤖</span>
+      <span>Robot</span>
+    </div>
+    <div class="icon-option" data-emoji="💭">
+      <span class="emoji">💭</span>
+      <span>Thought</span>
+    </div>
+    <div class="icon-option" data-emoji="🗨️">
+      <span class="emoji">🗨️</span>
+      <span>Chat bubble</span>
+    </div>
+    <div class="icon-option" data-emoji="🔵">
+      <span class="emoji">🔵</span>
+      <span>Circle</span>
+    </div>
+    <div class="icon-option" data-emoji="👾">
+      <span class="emoji">👾</span>
+      <span>Alien</span>
+    </div>
+    <div class="icon-option" data-emoji="✨">
+      <span class="emoji">✨</span>
+      <span>Sparkles</span>
+    </div>
+    <div class="icon-option" data-emoji="🌐">
+      <span class="emoji">🌐</span>
+      <span>Globe</span>
+    </div>
+  </div>
+  
+  <h2>2. Choose Background Color</h2>
+  <div class="color-options">
+    <div class="color-option selected" style="background-color: transparent;" data-color="transparent"></div>
+    <div class="color-option" style="background-color: #ffffff;" data-color="#ffffff"></div>
+    <div class="color-option" style="background-color: #4c8bf5;" data-color="#4c8bf5"></div>
+    <div class="color-option" style="background-color: #34a853;" data-color="#34a853"></div>
+    <div class="color-option" style="background-color: #fbbc05;" data-color="#fbbc05"></div>
+    <div class="color-option" style="background-color: #ea4335;" data-color="#ea4335"></div>
+    <div class="color-option" style="background-color: #9c27b0;" data-color="#9c27b0"></div>
+    <div class="color-option" style="background-color: #000000;" data-color="#000000"></div>
+  </div>
+  
+  <h2>3. Generate & Download</h2>
+  <div>
+    <button id="generate">Generate Favicon</button>
+    <button id="download" disabled>Download Favicon</button>
+  </div>
+  
+  <canvas id="favicon-canvas" width="64" height="64"></canvas>
+  
+  <script>
+    // DOM elements
+    const canvas = document.getElementById('favicon-canvas');
+    const ctx = canvas.getContext('2d');
+    const generateBtn = document.getElementById('generate');
+    const downloadBtn = document.getElementById('download');
+    
+    // State
+    let selectedEmoji = '💬';
+    let selectedColor = 'transparent';
+    
+    // Set up icon options
+    document.querySelectorAll('.icon-option').forEach(option => {
+      option.addEventListener('click', () => {
+        document.querySelector('.icon-option.selected').classList.remove('selected');
+        option.classList.add('selected');
+        selectedEmoji = option.getAttribute('data-emoji');
+      });
+    });
+    
+    // Set up color options
+    document.querySelectorAll('.color-option').forEach(option => {
+      option.addEventListener('click', () => {
+        document.querySelector('.color-option.selected').classList.remove('selected');
+        option.classList.add('selected');
+        selectedColor = option.getAttribute('data-color');
+      });
+    });
+    
+    // Generate favicon
+    generateBtn.addEventListener('click', () => {
+      // Clear canvas
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      
+      // Draw background if not transparent
+      if (selectedColor !== 'transparent') {
+        ctx.fillStyle = selectedColor;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+      }
+      
+      // Draw emoji
+      ctx.font = '48px Arial';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(selectedEmoji, canvas.width / 2, canvas.height / 2);
+      
+      // Enable download button
+      downloadBtn.disabled = false;
+    });
+    
+    // Download favicon
+    downloadBtn.addEventListener('click', () => {
+      // Create a link to download the canvas as PNG
+      const link = document.createElement('a');
+      link.download = 'favicon.ico';
+      link.href = canvas.toDataURL('image/png');
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    });
+    
+    // Generate a default favicon on load
+    window.addEventListener('load', () => {
+      generateBtn.click();
+    });
+  </script>
+</body>
+</html> 
