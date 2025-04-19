@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import ChatInterface from '../ChatInterface';
 import { IndustryId, IndustryTheme, IndustryConfigs } from '../../types/chatTypes';
 

@@ -12,10 +12,22 @@ import Footer from './components/Footer';
 function App() {
   // Reset scroll position to top on initial load
   useEffect(() => {
-    // Check if there's no hash in the URL (to avoid interfering with direct section links)
-    if (!window.location.hash) {
+    // Force scroll to top on initial page load
+    window.history.scrollRestoration = 'manual';
+    
+    // Remove any hash from URL without triggering a scroll
+    if (window.location.hash) {
+      const scrollPosition = window.pageYOffset;
+      window.location.hash = '';
+      window.scrollTo(0, 0);
+    } else {
       window.scrollTo(0, 0);
     }
+
+    // Add 'loaded' class to enable smooth scrolling after initial render
+    setTimeout(() => {
+      document.documentElement.classList.add('loaded');
+    }, 500);
   }, []);
 
   return (

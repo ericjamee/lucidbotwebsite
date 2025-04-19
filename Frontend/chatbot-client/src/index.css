@@ -3,9 +3,14 @@
 @tailwind utilities;
 
 html {
-  scroll-behavior: smooth;
+  scroll-behavior: auto; /* Changed from smooth to auto to prevent auto-scrolling */
   height: 100%;
   scroll-padding-top: 70px; /* Add padding for fixed header */
+}
+
+/* Apply smooth scrolling only after page has loaded completely */
+html.loaded {
+  scroll-behavior: smooth;
 }
 
 body {
