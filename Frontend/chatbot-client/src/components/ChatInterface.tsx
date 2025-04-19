@@ -13,9 +13,7 @@ const INDUSTRY_SYSTEM_MESSAGES: Record<IndustryId, string> = {
   
   restaurant: 'You are a helpful assistant for a restaurant using Lucid Bot. Provide information about our menu items, operating hours, reservations, and dining options. Be friendly and inviting. Use **bold text** for specials and *italics* for dish names.',
   
-  ecommerce: 'You are a helpful assistant for Lucid Bot e-commerce store. Provide information about our products, shipping policies, returns, and customer service. Be helpful and solution-oriented. Use **bold text** for promotions and *italics* for product names.',
-  
-  realestate: 'You are a helpful assistant for a Lucid Bot real estate agency. Provide information about our listings, viewing processes, application requirements, and market trends. Be knowledgeable and professional. Use **bold text** for property features and *italics* for location names.'
+  ecommerce: 'You are a helpful assistant for Lucid Bot e-commerce store. Provide information about our products, shipping policies, returns, and customer service. Be helpful and solution-oriented. Use **bold text** for promotions and *italics* for product names.'
 };
 
 interface ChatInterfaceProps {

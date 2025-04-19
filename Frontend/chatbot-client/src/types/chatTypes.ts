@@ -1,5 +1,5 @@
 // Industry ID type
-export type IndustryId = 'general' | 'coach' | 'restaurant' | 'ecommerce' | 'realestate';
+export type IndustryId = 'general' | 'coach' | 'restaurant' | 'ecommerce';
 
 // Industry theme interface
 export interface IndustryTheme {

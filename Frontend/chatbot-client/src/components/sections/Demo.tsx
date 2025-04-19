@@ -63,21 +63,6 @@ const industryConfigs: IndustryConfigs = {
       'Do you ship internationally?',
       'How can I track my order?'
     ]
-  },
-  realestate: {
-    name: 'Real Estate',
-    theme: {
-      primary: 'from-sky-600 to-cyan-500',
-      secondary: 'bg-sky-600',
-      icon: '🏠',
-      bgColor: 'bg-sky-50',
-      headerColor: 'bg-sky-600'
-    },
-    samplePrompts: [
-      'What areas do you serve?',
-      'How do I schedule a viewing?',
-      'What documents do I need to apply?'
-    ]
   }
 };
 
@@ -129,92 +114,117 @@ const Demo: React.FC = () => {
   };
 
   return (
-    <div id="demo" className="py-16 bg-gray-50">
+    <div id="demo" className="py-10 bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center">
           <h2 className="text-base text-primary-600 font-semibold tracking-wide uppercase">Try It Now</h2>
           <p className="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-neutral-900 sm:text-4xl">
             Live Demo
           </p>
-          <p className="mt-4 max-w-2xl text-xl text-neutral-600 lg:mx-auto">
-            See how a custom AI chatbot would work for different types of businesses. Select an industry to experience a tailored chatbot.
+          <p className="mt-3 max-w-2xl text-lg text-neutral-600 lg:mx-auto">
+            See how a tailored chatbot can work for different industries.
           </p>
         </div>
 
-        <div className="mt-10 mb-8">
-          <div className="flex flex-wrap justify-center gap-3">
-            {Object.entries(industryConfigs).map(([id, config]) => (
-              <button
-                key={id}
-                onClick={() => handleIndustryChange(id as IndustryId)}
-                className={`px-5 py-3 rounded-lg text-sm font-medium transition-all duration-200 flex items-center ${
-                  selectedIndustry === id
-                    ? `bg-gradient-to-r ${config.theme.primary} text-white shadow-md scale-105`
-                    : 'bg-white text-neutral-700 hover:bg-gray-100 hover:scale-105 border border-gray-200'
-                }`}
+        <div className="mt-6">
+          <div 
+            ref={chatContainerRef}
+            className={`max-w-4xl mx-auto rounded-xl shadow-lg overflow-hidden transition-all duration-300 transform
+              ${isAnimating ? 'opacity-30 scale-95' : 'opacity-100 scale-100'} bg-white border border-gray-200`}
+          >
+            {/* Chat header with industry selector */}
+            <div className={`bg-gradient-to-r ${activeTheme.primary} text-white p-3 transition-colors duration-300`}>
+              {/* Two-row layout for mobile, single row for desktop */}
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+                {/* Bot name and controls */}
+                <div className="flex items-center mb-2 sm:mb-0">
+                  <span className="text-lg mr-2">{industryConfigs[selectedIndustry].theme.icon}</span>
+                  <h3 className="font-bold text-sm md:text-base">{industryConfigs[selectedIndustry].name} Chat Assistant</h3>
+                  
+                  <div className="flex space-x-1 ml-auto sm:hidden">
+                    <div className="h-2 w-2 rounded-full bg-white bg-opacity-30"></div>
+                    <div className="h-2 w-2 rounded-full bg-white bg-opacity-50"></div>
+                    <div className="h-2 w-2 rounded-full bg-white bg-opacity-70"></div>
+                  </div>
+                </div>
+                
+                {/* Industry toggle tabs */}
+                <div className="flex items-center gap-1 overflow-x-auto hide-scrollbar">
+                  {Object.entries(industryConfigs).map(([id, config]) => (
+                    <button
+                      key={id}
+                      onClick={() => handleIndustryChange(id as IndustryId)}
+                      className={`flex items-center whitespace-nowrap px-2 py-1 rounded-full text-xs transition-all ${
+                        selectedIndustry === id
+                          ? 'bg-white text-blue-600 font-medium shadow-sm'
+                          : 'bg-white bg-opacity-20 text-white hover:bg-opacity-30'
+                      }`}
+                    >
+                      <span className="mr-1">{config.theme.icon}</span>
+                      <span>{config.name}</span>
+                    </button>
+                  ))}
+                </div>
+                
+                <div className="hidden sm:flex space-x-1 ml-4">
+                  <div className="h-2 w-2 rounded-full bg-white bg-opacity-30"></div>
+                  <div className="h-2 w-2 rounded-full bg-white bg-opacity-50"></div>
+                  <div className="h-2 w-2 rounded-full bg-white bg-opacity-70"></div>
+                </div>
+              </div>
+            </div>
+            
+            <div className={`${activeTheme.bgColor} h-[350px] bg-white flex flex-col`}>
+              <ChatInterface 
+                theme={activeTheme} 
+                industryType={selectedIndustry} 
+                ref={chatInterfaceRef}
+              />
+            </div>
+            
+            <div className={`bg-white border-t border-gray-200 p-3`}>
+              <p className="text-xs font-medium text-gray-500 uppercase mb-1">Try asking:</p>
+              <div className="flex flex-wrap gap-2">
+                {industryConfigs[selectedIndustry].samplePrompts.map((prompt: string, index: number) => (
+                  <button
+                    key={index}
+                    className={`text-xs px-2 py-1 rounded-full bg-gray-100 text-gray-700 hover:bg-gray-200 transition-colors sample-prompt-btn border border-gray-200`}
+                    onClick={() => handlePromptClick(prompt)}
+                  >
+                    {prompt}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+          
+          <div className="mt-8 text-center">
+            <p className="text-neutral-600 mb-3 text-sm">
+              Want a customized chatbot for your specific business needs?
+            </p>
+            <div>
+              <a
+                href="#pricing"
+                className={`inline-flex items-center px-5 py-2 border border-transparent text-sm font-medium rounded-md shadow-md text-white bg-gradient-to-r ${activeTheme.primary} hover:opacity-90 transition-opacity`}
               >
-                <span className="mr-2">{config.theme.icon}</span>
-                {config.name}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        <div 
-          ref={chatContainerRef}
-          className={`max-w-4xl mx-auto rounded-xl shadow-xl overflow-hidden transition-all duration-300 transform
-            ${isAnimating ? 'opacity-30 scale-95' : 'opacity-100 scale-100'} bg-white border border-gray-200`}
-        >
-          <div className={`${activeTheme.headerColor} text-white p-4 flex items-center justify-between transition-colors duration-300`}>
-            <div className="flex items-center">
-              <span className="text-xl mr-2">{activeTheme.icon}</span>
-              <h3 className="font-bold">{industryConfigs[selectedIndustry].name} Chat Assistant</h3>
+                Get Your Custom Chatbot
+              </a>
             </div>
-            <div className="flex space-x-2">
-              <div className="h-3 w-3 rounded-full bg-white bg-opacity-30"></div>
-              <div className="h-3 w-3 rounded-full bg-white bg-opacity-50"></div>
-              <div className="h-3 w-3 rounded-full bg-white bg-opacity-70"></div>
-            </div>
-          </div>
-          
-          <div className={`${activeTheme.bgColor} h-[500px] bg-white flex flex-col`}>
-            <ChatInterface 
-              theme={activeTheme} 
-              industryType={selectedIndustry} 
-              ref={chatInterfaceRef}
-            />
-          </div>
-          
-          <div className={`bg-white border-t border-gray-200 p-4`}>
-            <p className="text-xs font-medium text-gray-500 uppercase mb-2">Try asking:</p>
-            <div className="flex flex-wrap gap-2">
-              {industryConfigs[selectedIndustry].samplePrompts.map((prompt: string, index: number) => (
-                <button
-                  key={index}
-                  className={`text-xs px-3 py-1.5 rounded-full bg-gray-100 text-gray-700 hover:bg-gray-200 transition-colors sample-prompt-btn border border-gray-200`}
-                  onClick={() => handlePromptClick(prompt)}
-                >
-                  {prompt}
-                </button>
-              ))}
-            </div>
-          </div>
-        </div>
-        
-        <div className="mt-10 text-center">
-          <p className="text-neutral-600 mb-4">
-            Want a customized chatbot for your specific business needs?
-          </p>
-          <div>
-            <a
-              href="#pricing"
-              className={`inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-md text-white bg-gradient-to-r ${activeTheme.primary} hover:opacity-90 transition-opacity`}
-            >
-              Get Your Custom Chatbot
-            </a>
           </div>
         </div>
       </div>
+      
+      <style>
+        {`
+        .hide-scrollbar::-webkit-scrollbar {
+          display: none;
+        }
+        .hide-scrollbar {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
+        `}
+      </style>
     </div>
   );
 };
