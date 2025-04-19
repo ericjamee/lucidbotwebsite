@@ -17,7 +17,7 @@ function App() {
     
     // Remove any hash from URL without triggering a scroll
     if (window.location.hash) {
-      const scrollPosition = window.pageYOffset;
+      // Clear hash without scrolling
       window.location.hash = '';
       window.scrollTo(0, 0);
     } else {
